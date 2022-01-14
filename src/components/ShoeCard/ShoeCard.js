@@ -5,6 +5,21 @@ import { COLORS, WEIGHTS } from '../../constants';
 import { formatPrice, pluralize, isNewShoe } from '../../utils';
 import Spacer from '../Spacer';
 
+const TAG_STYLES = {
+  'on-sale': {
+    '--bgColor': COLORS.primary,
+    '--fontColor': COLORS.white
+  },
+  'new-release': {
+    '--bgColor': COLORS.secondary,
+    '--fontColor': COLORS.white
+  },
+  'default': {
+    '--bgColor': 'transparent',
+    '--fontColor': 'transparent'
+  },
+}
+
 const ShoeCard = ({
   slug,
   name,
@@ -25,25 +40,32 @@ const ShoeCard = ({
   // both on-sale and new-release, but in this case, `on-sale`
   // will triumph and be the variant used.
   // prettier-ignore
+
   const variant = typeof salePrice === 'number'
     ? 'on-sale'
     : isNewShoe(releaseDate)
       ? 'new-release'
       : 'default'
 
+  const tagStyle = TAG_STYLES[variant];
+
   return (
     <Link href={`/shoe/${slug}`}>
       <Wrapper>
+        <SpecialTag style={tagStyle}></SpecialTag>
         <ImageWrapper>
           <Image alt="" src={imageSrc} />
         </ImageWrapper>
         <Spacer size={12} />
         <Row>
           <Name>{name}</Name>
-          <Price>{formatPrice(price)}</Price>
+          <Price className={salePrice ? 'onSale':''}>{formatPrice(price)}</Price>
         </Row>
         <Row>
           <ColorInfo>{pluralize('Color', numOfColors)}</ColorInfo>
+          {salePrice &&
+            <SalePrice>{formatPrice(salePrice)}</SalePrice>
+          }
         </Row>
       </Wrapper>
     </Link>
@@ -53,18 +75,28 @@ const ShoeCard = ({
 const Link = styled.a`
   text-decoration: none;
   color: inherit;
+  flex: 0 0 340px;
 `;
 
-const Wrapper = styled.article``;
+const Wrapper = styled.article`
+  position: relative;
+`;
 
+const SpecialTag = styled.div `
+`
 const ImageWrapper = styled.div`
   position: relative;
 `;
 
-const Image = styled.img``;
+const Image = styled.img`
+  width: 100%;
+  border-radius 16px 16px 4px 4px;
+`;
 
 const Row = styled.div`
   font-size: 1rem;
+  display: flex;
+  justify-content: space-between;
 `;
 
 const Name = styled.h3`
@@ -72,7 +104,12 @@ const Name = styled.h3`
   color: ${COLORS.gray[900]};
 `;
 
-const Price = styled.span``;
+const Price = styled.span`
+  &.onSale {
+    text-decoration: line-through;
+    color: ${COLORS.gray[700]}
+  }
+`;
 
 const ColorInfo = styled.p`
   color: ${COLORS.gray[700]};
