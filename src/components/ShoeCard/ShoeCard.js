@@ -75,7 +75,6 @@ const ShoeCard = ({
 const Link = styled.a`
   text-decoration: none;
   color: inherit;
-  flex: 0 0 340px;
 `;
 
 const Wrapper = styled.article`
@@ -83,6 +82,7 @@ const Wrapper = styled.article`
 `;
 
 const SpecialTag = styled.div `
+
 `
 const ImageWrapper = styled.div`
   position: relative;
