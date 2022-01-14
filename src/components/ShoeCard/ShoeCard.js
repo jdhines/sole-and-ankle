@@ -4,21 +4,8 @@ import styled from 'styled-components/macro';
 import { COLORS, WEIGHTS } from '../../constants';
 import { formatPrice, pluralize, isNewShoe } from '../../utils';
 import Spacer from '../Spacer';
+import SpecialsTag from '../SpecialsTag'
 
-const TAG_STYLES = {
-  'on-sale': {
-    '--bgColor': COLORS.primary,
-    '--fontColor': COLORS.white
-  },
-  'new-release': {
-    '--bgColor': COLORS.secondary,
-    '--fontColor': COLORS.white
-  },
-  'default': {
-    '--bgColor': 'transparent',
-    '--fontColor': 'transparent'
-  },
-}
 
 const ShoeCard = ({
   slug,
@@ -47,13 +34,14 @@ const ShoeCard = ({
       ? 'new-release'
       : 'default'
 
-  const tagStyle = TAG_STYLES[variant];
 
   return (
     <Link href={`/shoe/${slug}`}>
       <Wrapper>
-        <SpecialTag style={tagStyle}></SpecialTag>
         <ImageWrapper>
+          {(variant === 'on-sale' || variant === 'new-release') &&
+            <SpecialsTag variant={variant}></SpecialsTag>
+          }
           <Image alt="" src={imageSrc} />
         </ImageWrapper>
         <Spacer size={12} />
@@ -82,7 +70,14 @@ const Wrapper = styled.article`
 `;
 
 const SpecialTag = styled.div `
-
+  position: absolute;
+  right: -4px;
+  top: 12px;
+  padding: 8px 12px;
+  background: var(--bgColor);
+  color: var(--fontColor);
+  border-radius: 2px;
+  font-weight: ${WEIGHTS.bold}
 `
 const ImageWrapper = styled.div`
   position: relative;
